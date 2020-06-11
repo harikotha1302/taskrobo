@@ -27,26 +27,11 @@ import com.practice.taskrobo.service.TaskService;
 @RestController
 @PropertySource("classpath:application.properties")
 public class CategoryController {
-    /*
-     * From the problem statement, we can understand that the application requires
-     * us to implement the following functionalities.
-     *
-     * 1. display the list of existing Categories from the persistence data. Each Category
-     * element should contain CategoryTitle 2. Add a new category which should contain the Title
-     * 3.Delete an existing Category 4.Get All Tasks associated with particular category
-     *
-     */
+    
 	@Autowired
     private CategoryService categoryService;
 	@Autowired
 	private TaskService taskService;
-
-    /*
-     * Constructor based Autowiring should be implemented for the CategoryService and
-     * Environment.Please note that we should not create any object using the new
-     * keyword.
-     */
-
 
     /*
      * Define a handler method to fetch all categories. Also add category and task

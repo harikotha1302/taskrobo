@@ -37,7 +37,7 @@ public class CategoryService {
     
 
     public boolean saveCategory(Category category) throws CategoryAlreadyExistException {
-    	if(categoryDao.findById(category.getCategoryTitle())!=null) {
+    	if(categoryDao.findById(category.getCategoryTitle()).isPresent()) {
     		throw new CategoryAlreadyExistException(categoryAlreadyExistException);
     	}
     	categoryDao.save(category);    	

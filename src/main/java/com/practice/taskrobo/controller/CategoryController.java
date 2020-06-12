@@ -1,12 +1,10 @@
 package com.practice.taskrobo.controller;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +16,6 @@ import com.practice.taskrobo.domain.Task;
 import com.practice.taskrobo.exception.CategoryAlreadyExistException;
 import com.practice.taskrobo.exception.CategoryDoesNotExistException;
 import com.practice.taskrobo.service.CategoryService;
-import com.practice.taskrobo.service.TaskService;
 
 /*
  * Annotate the class with @Controller annotation. @Controller annotation is used to mark
@@ -38,8 +35,6 @@ public class CategoryController {
      */
 	@Autowired
     private CategoryService categoryService;
-	@Autowired
-	private TaskService taskService;
 
     /*
      * Constructor based Autowiring should be implemented for the CategoryService and
@@ -82,16 +77,13 @@ public class CategoryController {
      */
 
     @GetMapping("/deleteCategory")
-    public String deleteCategory(@RequestParam("categoryTitle") String categoryTitle) {
+    public ResponseEntity<String> deleteCategory(@RequestParam("categoryTitle") String categoryTitle) {
     	try {
 			categoryService.deleteCategory(categoryTitle);
+			return new ResponseEntity<String>(categoryTitle, HttpStatus.OK);
 		} catch (CategoryDoesNotExistException e) {
-			//throw new CategoryDoesNotExistException();
-			e.printStackTrace();
-		}catch(Exception exe) {
-			return "redirect:/";
+			return new ResponseEntity<String>( e.getMessage(),HttpStatus.NOT_FOUND);
 		}
-    	return "redirect:/";
     }
     /*
      * Define a handler method to fetch all tasks of particular category. This handler
@@ -100,16 +92,12 @@ public class CategoryController {
      */
 
     @GetMapping("/getTasks")
-    public String getAllTasks(@RequestParam("categoryTitle") String categoryTitle, ModelMap model) {
-    	List<Task> allTasks = new ArrayList<>();
+    public ResponseEntity<List<Task>> getAllTasks(@RequestParam("categoryTitle") String categoryTitle) {
     	try {
-    		allTasks = categoryService.getAllTasks(categoryTitle);
+			List<Task> task=categoryService.getAllTasks(categoryTitle);
+			return new ResponseEntity<List<Task>>(task,HttpStatus.OK);
 		} catch (CategoryDoesNotExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ResponseEntity<List<Task>>(HttpStatus.NOT_FOUND);
 		}
-    	model.addAttribute("task", allTasks );
-        return "index";
     }
-
 }

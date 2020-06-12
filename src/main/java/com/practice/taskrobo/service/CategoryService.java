@@ -2,6 +2,7 @@ package com.practice.taskrobo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import com.practice.taskrobo.domain.Task;
 import com.practice.taskrobo.exception.CategoryAlreadyExistException;
 import com.practice.taskrobo.exception.CategoryDoesNotExistException;
 import com.practice.taskrobo.repository.CategoryRepository;
+import com.practice.taskrobo.repository.TaskRepository;
 
 /*
  * Service classes are used here to implement additional business logic/validation
@@ -19,23 +21,25 @@ import com.practice.taskrobo.repository.CategoryRepository;
 @Service
 @PropertySource("classpath:application.properties")
 public class CategoryService {
+	
+	@Value("${categoryAlreadyExistException.message}")
+	String categoryAlreadyExistException;
+	
+	@Value("${categoryDoesNotExistException.message}")
+	String categoryDoesNotExistException;
+	
 	@Autowired
     private CategoryRepository categoryDao;
-    /* Do not hardcode exception message. Get it from application.properties using environment variables. */
 	
 
-    /*
-     * Constructor based Autowiring should be implemented for the CategoryDao and
-     * Environment.Please note that we should not create any object using the new
-     * keyword.
-     */
-
-
-    /*
-     * This method should be used to save a new category.
-     */
+	@Autowired
+    private TaskRepository taskDao;
+    
 
     public boolean saveCategory(Category category) throws CategoryAlreadyExistException {
+    	if(categoryDao.findById(category.getCategoryTitle())!=null) {
+    		throw new CategoryAlreadyExistException(categoryAlreadyExistException);
+    	}
     	categoryDao.save(category);    	
         return true;
     }
@@ -45,14 +49,19 @@ public class CategoryService {
      */
 
     public Category getCategoryByTitle(String categoryTitle) throws CategoryDoesNotExistException {    	
-        return categoryDao.findById(categoryTitle).orElseGet(null);
+        return categoryDao.findById(categoryTitle).orElseThrow(()->new CategoryDoesNotExistException(categoryDoesNotExistException));
         }
 
     /*
      * This method should be used to get all the tasks for particular Category.
      */
     public List<Task> getAllTasks(String categoryTitle) throws CategoryDoesNotExistException {
-        return null;
+    	if(categoryDao.findById(categoryTitle).isPresent())
+    	{
+    		//return taskDao.getAllTaskByCatogery(categoryTitle);
+    		return null;
+    	}
+        throw new CategoryDoesNotExistException(categoryDoesNotExistException);
     }
 
     /*
@@ -66,7 +75,10 @@ public class CategoryService {
     /* This method should be used to delete an existing category. */
 
     public boolean deleteCategory(String categoryTitle) throws CategoryDoesNotExistException {
+    	if(categoryDao.findById(categoryTitle).isPresent())
+    	{
     	categoryDao.deleteById(categoryTitle);
-        return true;
+    	}
+        throw new CategoryDoesNotExistException(categoryDoesNotExistException);
     }
 }

@@ -1,11 +1,12 @@
 package com.practice.taskrobo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class UserController {
 	JwtUtil jwtutil;
 
 	@PostMapping(value = "/authentication")
-	public AuthenticateResponse authenticateToken(@RequestBody AuthenticateRequest request) throws Exception {
+	public ResponseEntity<AuthenticateResponse> authenticateToken(@RequestBody AuthenticateRequest request) throws Exception {
 		try {
 			authentication.authenticate(
 					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -39,7 +40,7 @@ public class UserController {
 		final UserDetails userDetails=userdetailsservice.loadUserByUsername(request.getUsername());
 		final String jwt=jwtutil.generateToken(userDetails);
 		AuthenticateResponse response=new AuthenticateResponse(jwt);
-		return response;
+		return new ResponseEntity<>(response,HttpStatus.OK);
 
 	}
 }

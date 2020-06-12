@@ -23,7 +23,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return new User("harikrishna", passwordEncrypter.encode("admin123"),new ArrayList<>());
+		return new User("harikrishna", passwordEncrypter.encode("admin123"),getAuthorities(Collections.singletonList("ADMIN")));
 	}
 	
 	private Collection<? extends GrantedAuthority> getAuthorities(

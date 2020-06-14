@@ -1,11 +1,17 @@
 package com.practice.taskrobo.domain;
 
+import java.io.Serializable;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthenticateRequest {
+public class AuthenticateRequest implements Serializable {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String username;
 	public String password;
 	

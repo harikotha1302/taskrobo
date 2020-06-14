@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ import com.practice.taskrobo.service.CategoryService;
  */
 @RestController
 @PropertySource("classpath:application.properties")
+@RequestMapping("/category")
 public class CategoryController {
     /*
      * From the problem statement, we can understand that the application requires
@@ -50,6 +52,7 @@ public class CategoryController {
      * If the operation success then return to index.
      */
     @GetMapping(value="/")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public List<Category> getCategory() {
     	return categoryService.getAllCategories();
     }
@@ -62,6 +65,7 @@ public class CategoryController {
      */
    
     @PostMapping(value = "/addCategory")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> saveCategory(@RequestBody Category category) {
     	try {
 			categoryService.saveCategory(category);
@@ -79,6 +83,7 @@ public class CategoryController {
      */
 
     @GetMapping("/deleteCategory")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCategory(@RequestParam("categoryTitle") String categoryTitle) {
     	try {
 			categoryService.deleteCategory(categoryTitle);
@@ -94,6 +99,7 @@ public class CategoryController {
      */
 
     @GetMapping("/getTasks")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Task>> getAllTasks(@RequestParam("categoryTitle") String categoryTitle) {
     	try {
 			List<Task> task=categoryService.getAllTasks(categoryTitle);

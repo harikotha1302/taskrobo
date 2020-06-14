@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class UserController {
 	JwtUtil jwtutil;
 
 	@PostMapping(value = "/authentication")
-	public ResponseEntity<AuthenticateResponse> authenticateToken(@RequestBody AuthenticateRequest request) throws Exception {
+	public ResponseEntity<AuthenticateResponse> authenticateToken(@Validated @RequestBody AuthenticateRequest request) throws Exception {
 		try {
 			authentication.authenticate(
 					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));

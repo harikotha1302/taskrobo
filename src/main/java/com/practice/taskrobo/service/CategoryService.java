@@ -32,11 +32,7 @@ public class CategoryService {
     private CategoryRepository categoryDao;
 	
 
-	@Autowired
-    private TaskRepository taskDao;
-    
-
-    public boolean saveCategory(Category category) throws CategoryAlreadyExistException {
+	public boolean saveCategory(Category category) throws CategoryAlreadyExistException {
     	if(categoryDao.findById(category.getCategoryTitle()).isPresent()) {
     		throw new CategoryAlreadyExistException(categoryAlreadyExistException);
     	}

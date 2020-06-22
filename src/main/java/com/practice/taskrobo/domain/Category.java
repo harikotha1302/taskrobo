@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /*
  * The class "Category" will be acting as the data model for the Category Table in the database.
  * Please note that this class is annotated with @Entity annotation.
@@ -18,6 +20,7 @@ public class Category {
 
     /* tasks is annotated with @OneToMany */
 	@OneToMany(cascade = CascadeType.REMOVE,mappedBy = "category")	
+	@JsonIgnore
     private List<Task> tasks;
 
     public Category() {
